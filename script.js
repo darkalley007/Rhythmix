@@ -8,7 +8,7 @@ let songs = [];
 async function getsongs(folder) {
   try {
     currFolder = folder;
-    let a = await fetch(`https://rhythmix-5lzn.vercel.app/${folder}/`);
+    let a = await fetch(`http://127.0.0.1:5500/${folder}/`);
     if (!a.ok) throw new Error("Network response was not ok");
 
     let response = await a.text();
@@ -78,8 +78,10 @@ const playMusic = (track) => {
     currentAudio.pause();
     currentAudio.currentTime = 0;
   }
+  
 
-  let songPath = `https://rhythmix-5lzn.vercel.app/${currFolder}/${encodeURIComponent(track)}`;
+
+  let songPath = `http://127.0.0.1:5500/${currFolder}/${encodeURIComponent(track)}`;
   currentAudio = new Audio(songPath);
 
   document.querySelector(".songinfo").innerHTML = track.replaceAll("%20", " ");
@@ -100,7 +102,8 @@ const playMusic = (track) => {
 
   currentAudio.onended = () => {
     playNextInAlbum();
-  };
+};
+
 
   currentAudio.play().catch(err => console.error("Audio play error:", err));
 };
@@ -207,10 +210,10 @@ if (volumeSlider) {
 }
 
 const playNextInAlbum = () => {
-  if (currentSongIndex < songs.length - 1) {
-    currentSongIndex++;
-    playMusic(songs[currentSongIndex]);
-  }
+    if (currentSongIndex < songs.length - 1) {
+        currentSongIndex++;  // Move to next song
+        playMusic(songs[currentSongIndex]);
+    }
 };
 
 function changeVolume(e) {
@@ -249,3 +252,25 @@ const formatTime = (seconds) => {
 };
 
 main();
+// ✅ Fixed Hamburger Menu Toggle
+const hamburger = document.querySelector(".hamburger");
+const closeBtn = document.querySelector(".left .close");
+const leftMenu = document.querySelector(".left");
+
+if (hamburger) {
+  hamburger.removeEventListener("click", toggleMenu);
+  hamburger.addEventListener("click", toggleMenu);
+}
+
+if (closeBtn) {
+  closeBtn.removeEventListener("click", toggleMenu);
+  closeBtn.addEventListener("click", toggleMenu);
+}
+
+function toggleMenu() {
+  if (leftMenu.style.left === "0px") {
+    leftMenu.style.left = "-120%";
+  } else {
+    leftMenu.style.left = "0px";
+  }
+}
